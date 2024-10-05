@@ -1,0 +1,124 @@
+// // This is your Prisma schema file,
+// // learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+
+// model User {
+//   id       Int    @id @default(autoincrement())
+//   email    String @unique
+//   name     String
+//   password String
+//   role     String @default("user")
+//   cart     Cart?
+// }
+
+// model Cart {
+//   id          Int           @id @default(autoincrement())
+//   userId      Int           @unique
+//   user        User          @relation(fields: [userId], references: [id])
+//   cartProduct CartProduct[]
+// }
+
+// model CartProduct {
+//   id       Int  @id @default(autoincrement())
+//   quantity Int  @default(1)
+//   cartId   Int
+//   cart     Cart @relation(fields: [cartId], references: [id])
+// }
+
+// model Product {
+//   id                Int          @id @default(autoincrement())
+//   name              String
+//   description       String
+//   img               String
+//   price             Float
+//   productCategoryId Int?
+//   productCategory   SubCategory? @relation(fields: [productCategoryId], references: [id])
+// }
+
+// model Category {
+//   id            Int         @id @default(autoincrement())
+//   name          String      @unique
+//   subCategoryId Int
+//   subCategory   SubCategory @relation(fields: [subCategoryId], references: [id])
+// }
+
+// model SubCategory {
+//   id       Int        @id @default(autoincrement())
+//   name     String     @unique
+//   img      String
+//   product  Product[]
+//   category Category[]
+// }
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  name     String
+  password String
+  role     String @default("user")
+  cart     Cart?
+}
+
+model Cart {
+  id          Int           @id @default(autoincrement())
+  userId      Int           @unique
+  user        User          @relation(fields: [userId], references: [id])
+  cartProduct CartProduct[]
+}
+
+model CartProduct {
+  id       Int  @id @default(autoincrement())
+  quantity Int  @default(1)
+  cartId   Int
+  cart     Cart @relation(fields: [cartId], references: [id])
+}
+
+model Product {
+  id                Int          @id @default(autoincrement())
+  name              String
+  description       String
+  img               String
+  price             Float
+  productCategoryId Int?
+  productCategory   SubCategory? @relation(fields: [productCategoryId], references: [id])
+}
+
+model Category {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  subCategory SubCategory[]
+}
+
+model SubCategory {
+  id       Int        @id @default(autoincrement())
+  name     String     @unique
+  img      String
+  product  Product[]
+  category Category[]
+}
