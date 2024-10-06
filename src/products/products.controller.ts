@@ -39,18 +39,18 @@ export class ProductsController {
       description: string;
       img: string;
       price: number;
-      subCategoryName: string;
+      productCategoryId?: number;
     },
   ) {
-    const { name, description, img, price, subCategoryName } = productData;
+    const { name, description, img, price, productCategoryId } = productData;
     return this.productsService.createProduct({
       name,
       description,
       img,
       price,
-      productCategory: {
-        connect: { name: subCategoryName },
-      },
+      productCategory: productCategoryId
+        ? { connect: { id: productCategoryId } }
+        : undefined,
     });
   }
 

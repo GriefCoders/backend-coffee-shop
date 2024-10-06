@@ -9,14 +9,15 @@ export class ProductsService {
   async getAll(params: {
     skip?: number;
     take?: number;
-    orderBy?: Prisma.ProductOrderByWithRelationInput;
     where?: Prisma.ProductWhereInput;
   }) {
-    const { skip, take, orderBy, where } = params;
+    const { skip, take, where } = params;
     return this.prisma.product.findMany({
       skip,
       take,
-      orderBy,
+      orderBy: {
+        id: 'asc',
+      },
       where,
       include: { productCategory: true },
     });

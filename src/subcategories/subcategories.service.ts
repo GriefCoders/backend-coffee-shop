@@ -15,6 +15,11 @@ export class SubcategoriesService {
   }
 
   async create(data: Prisma.SubCategoryCreateInput) {
-    return this.prisma.subCategory.create({ data });
+    return this.prisma.subCategory.create({
+      data: {
+        name: data.name,
+        img: data.img,
+      },
+    });
   }
 }
