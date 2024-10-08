@@ -7,7 +7,10 @@ export class CategoriesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getAll() {
-    return this.prisma.category.findMany({ include: { subCategory: true } });
+    return this.prisma.category.findMany({
+      include: { subCategory: true },
+      orderBy: { id: 'asc' },
+    });
   }
 
   async getOne(id: Prisma.CategoryWhereUniqueInput) {
@@ -27,5 +30,9 @@ export class CategoriesService {
   }) {
     const { where, data } = params;
     return this.prisma.category.update({ where, data });
+  }
+
+  async delete(id: Prisma.CategoryWhereUniqueInput) {
+    return this.prisma.category.delete({ where: id });
   }
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -18,13 +19,6 @@ export class ProductsController {
   async getAllProducts() {
     return this.productsService.getAll({});
   }
-
-  // @Get()
-  // async getAllSearch(@Query() search: string) {
-  //   return this.productsService.getAll({
-  //     where: { name: { contains: search } },
-  //   });
-  // }
 
   @Get('/:id')
   async getOneProduct(@Param('id') id: string) {
@@ -54,7 +48,7 @@ export class ProductsController {
     });
   }
 
-  @Put(':id')
+  @Patch(':id')
   async updateProduct(
     @Param('id') id: string,
     @Body()
@@ -80,5 +74,10 @@ export class ProductsController {
           : undefined,
       },
     });
+  }
+
+  @Delete(':id')
+  async deleteProduct(@Param('id') id: string) {
+    return this.productsService.deleteProduct({ id: Number(id) });
   }
 }

@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
+  Patch,
   Post,
   Put,
 } from '@nestjs/common';
@@ -48,7 +50,7 @@ export class CategoriesController {
     return this.categoriesService.create(createData);
   }
 
-  @Put(':id')
+  @Patch(':id')
   async updateCategory(
     @Param('id') id: string,
     @Body() categoryData: { name?: string; subCategoryId?: number[] },
@@ -73,5 +75,10 @@ export class CategoriesController {
       where: { id: Number(id) },
       data: updateData,
     });
+  }
+
+  @Delete(':id')
+  async deleteCategory(@Param('id') id: string) {
+    return this.categoriesService.delete({ id: Number(id) });
   }
 }
