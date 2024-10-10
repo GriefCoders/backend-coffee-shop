@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
@@ -16,13 +15,21 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  async getAllProducts() {
+  async getAllProducts(@Query('search') search?: string) {
+    if (search) {
+      return this.productsService.search({ query: search });
+    }
     return this.productsService.getAll({});
   }
 
-  @Get('/:id')
+  @Get(':id')
   async getOneProduct(@Param('id') id: string) {
     return this.productsService.getOne({ id: Number(id) });
+  }
+
+  @Get('/category/:id')
+  async getByCategory(@Param('id') id: string) {
+    return this.productsService.getByCategory(Number(id));
   }
 
   @Post()
