@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { SubcategoriesService } from './subcategories.service';
 import { Prisma } from '@prisma/client';
 
@@ -22,5 +22,10 @@ export class SubcategoriesController {
   ) {
     const { name, img } = subcategoryData;
     return this.subcategoriesService.create({ name, img });
+  }
+
+  @Delete(':id')
+  async deleteSubcategory(@Param('id') id: string) {
+    return this.subcategoriesService.delete({ id: Number(id) });
   }
 }

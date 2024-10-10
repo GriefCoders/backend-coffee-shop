@@ -22,4 +22,8 @@ export class SubcategoriesService {
       },
     });
   }
+
+  async delete(id: Prisma.SubCategoryWhereUniqueInput) {
+    return this.prisma.subCategory.delete({ where: id });
+  }
 }
