@@ -23,6 +23,14 @@ export class SubcategoriesService {
     });
   }
 
+  async update(params: {
+    where: Prisma.SubCategoryWhereUniqueInput;
+    data: Prisma.SubCategoryUpdateInput;
+  }) {
+    const { data, where } = params;
+    return this.prisma.subCategory.update({ data, where });
+  }
+
   async delete(id: Prisma.SubCategoryWhereUniqueInput) {
     return this.prisma.subCategory.delete({ where: id });
   }
