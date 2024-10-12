@@ -66,4 +66,36 @@ export class ProductsService {
       where: id,
     });
   }
+
+  async delete(id: Prisma.ProductWhereUniqueInput) {
+    return this.prisma.product.delete({ where: id });
+  }
+
+  // async delete(where: Prisma.ProductWhereUniqueInput) {
+  //   // Check for any related cart items that reference the product
+  //   const relatedCartItems = await this.prisma.cartProduct.findMany({
+  //     where: {
+  //       productId: where.id, // Adjust if necessary to match your schema
+  //     },
+  //   });
+
+  //   // Optionally, check other relationships as needed
+  //   // const relatedOrders = await this.prisma.order.findMany({
+  //   //   where: {
+  //   //     productId: where.id,
+  //   //   },
+  //   // });
+
+  //   // If there are related cart items, throw an error
+  //   if (relatedCartItems.length > 0) {
+  //     throw new Error('Cannot delete product; it is referenced in cart items.');
+  //   }
+
+  //   // If you have other relationships, you can handle them similarly
+
+  //   // Proceed to delete the product if no related records are found
+  //   return this.prisma.product.delete({
+  //     where,
+  //   });
+  // }
 }
