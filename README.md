@@ -1,6 +1,6 @@
 # Backend Coffee Shop - Built with NestJS, Prisma, and PostgreSQL
 
-This repository contains the backend of a Coffee Shop application, built using **NestJS** for a modular and maintainable structure, **Prisma** as the ORM for interacting with a **PostgreSQL** database, and designed to provide APIs for managing products, orders, and customers.
+This repository contains the backend of a Coffee Shop application, built using **NestJS** for a modular and maintainable structure, **Prisma** as the ORM for interacting with a **PostgreSQL** database, and designed to provide APIs for managing products, categories, orders and users. For the frontend of this application, check out the **[Frontend Coffee Shop](https://github.com/nenertiy/frontend-coffee-shop)** built with React, TypeScript, and Vite.
 
 ## Features:
 - **NestJS**: A scalable and modular framework for building server-side applications.
