@@ -20,7 +20,7 @@ This repository contains the backend of a Coffee Shop application, built using *
 ```bash
 git clone https://github.com/your-username/backend-coffee-shop.git
 
-### Step 2: Install Dependencies
+### Step 1: Clone the Repository
 Navigate to the project folder and install the required packages:
 ```bash
 cd backend-coffee-shop
