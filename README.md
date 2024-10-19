@@ -18,7 +18,7 @@ This repository contains the backend of a Coffee Shop application, built using *
 
 ### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/your-username/backend-coffee-shop.git
+git clone https://github.com/nenertiy/backend-coffee-shop.git
 ```
 
 ### Step 1: Clone the Repository
