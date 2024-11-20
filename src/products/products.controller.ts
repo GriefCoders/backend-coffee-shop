@@ -87,13 +87,4 @@ export class ProductsController {
   async deleteProduct(@Param('id') id: string) {
     return this.productsService.delete({ id: Number(id) });
   }
-
-  // @Delete(':id')
-  // async deleteProduct(@Param('id') id: string) {
-  //   try {
-  //     return await this.productsService.delete({ id: Number(id) });
-  //   } catch (error) {
-  //     throw new BadRequestException(error.message); // Handle error gracefully
-  //   }
-  // }
 }
