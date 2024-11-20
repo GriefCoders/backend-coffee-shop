@@ -7,4 +7,8 @@ export class PasswordService {
     const salt = await bcrypt.genSalt(2);
     return bcrypt.hash(password, salt);
   }
+
+  async comparePassword(password: string, hashedPassword: string) {
+    return bcrypt.compare(password, hashedPassword);
+  }
 }
