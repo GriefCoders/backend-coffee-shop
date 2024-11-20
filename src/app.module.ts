@@ -6,6 +6,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { CartModule } from './cart/cart.module';
+import { PasswordModule } from './password/password.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { CartModule } from './cart/cart.module';
     UsersModule,
     AuthModule,
     CartModule,
+    PasswordModule,
   ],
   controllers: [],
   providers: [PrismaService],
