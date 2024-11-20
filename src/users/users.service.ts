@@ -11,6 +11,8 @@ export class UsersService {
     return this.usersRepository.findByEmail(email);
   }
 
+
+
   async createUser(user: UserCreateDto) {
     const hashedPassword = await bcrypt.hash(user.password, 10);
 
