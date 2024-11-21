@@ -4,11 +4,13 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
 import { SubcategoriesService } from './subcategories.service';
-import { Prisma } from '@prisma/client';
+import { SubcategoryCreateDto } from './dto/subcategory-create';
+import { SubcategoryUpdateDto } from './dto/subcategory-update';
 
 @Controller('subcategories')
 export class SubcategoriesController {
@@ -20,32 +22,25 @@ export class SubcategoriesController {
   }
 
   @Get(':id')
-  async getOneSubcategory(@Param('id') id: string) {
-    return this.subcategoriesService.getOne({ id: Number(id) });
+  async getOneSubcategory(@Param('id', ParseIntPipe) id: number) {
+    return this.subcategoriesService.getOne(id);
   }
 
   @Post()
-  async createSubcategory(
-    @Body() subcategoryData: { name: string; img: string },
-  ) {
-    const { name, img } = subcategoryData;
-    return this.subcategoriesService.create({ name, img });
+  async createSubcategory(@Body() subcategoryDto: SubcategoryCreateDto) {
+    return this.subcategoriesService.create(subcategoryDto);
   }
 
   @Patch(':id')
   async updateSubcategory(
-    @Param('id') id: string,
-    @Body() updateData: { name?: string; img?: string },
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateDto: SubcategoryUpdateDto,
   ) {
-    const { name, img } = updateData;
-    return this.subcategoriesService.update({
-      where: { id: Number(id) },
-      data: { name, img },
-    });
+    return this.subcategoriesService.update(updateDto, id);
   }
 
   @Delete(':id')
-  async deleteSubcategory(@Param('id') id: string) {
-    return this.subcategoriesService.delete({ id: Number(id) });
+  async deleteSubcategory(@Param('id', ParseIntPipe) id: number) {
+    return this.subcategoriesService.delete(id);
   }
 }
