@@ -6,6 +6,7 @@ import {
   Param,
   Get,
   Patch,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CartService } from './cart.service';
 
@@ -22,16 +23,21 @@ export class CartController {
       quantity?: number;
     },
   ) {
-    const { userId, productId, quantity } = addToCartDto;
-    return await this.cartService.addToCart(userId, productId, quantity || 1);
+    return await this.cartService.addToCart(
+      addToCartDto.userId,
+      addToCartDto.productId,
+      addToCartDto.quantity || 1,
+    );
   }
 
   @Delete('remove')
   async removeFromCart(
     @Body() removeFromCartDto: { userId: number; productId: number },
   ) {
-    const { userId, productId } = removeFromCartDto;
-    return await this.cartService.removeFromCart(userId, productId);
+    return await this.cartService.removeFromCart(
+      removeFromCartDto.userId,
+      removeFromCartDto.productId,
+    );
   }
 
   @Patch('decrease')
@@ -43,12 +49,15 @@ export class CartController {
       quantity: number;
     },
   ) {
-    const { userId, productId, quantity } = decreaseQuantityDto;
-    return await this.cartService.decreaseQuantity(userId, productId, quantity);
+    return await this.cartService.decreaseQuantity(
+      decreaseQuantityDto.userId,
+      decreaseQuantityDto.productId,
+      decreaseQuantityDto.quantity,
+    );
   }
 
   @Get(':userId')
-  async getCart(@Param('userId') userId: number) {
-    return await this.cartService.getCart(Number(userId));
+  async getCart(@Param('userId', ParseIntPipe) userId: number) {
+    return await this.cartService.getCart(userId);
   }
 }
