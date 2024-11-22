@@ -1,38 +1,49 @@
-import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma.service';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CategoriesRepository } from './categories.repository';
+import { CategoryCreateDto } from './dto/category-create';
+import { CategoryUpdateDto } from './dto/category-update';
 
 @Injectable()
 export class CategoriesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly categoryRepository: CategoriesRepository) {}
 
   async getAll() {
-    return this.prisma.category.findMany({
-      include: { subCategory: true },
-      orderBy: { id: 'asc' },
-    });
+    return this.categoryRepository.findAllCategories();
   }
 
-  async getOne(id: Prisma.CategoryWhereUniqueInput) {
-    return this.prisma.category.findUnique({ where: id });
+  async getOne(id: number) {
+    return this.categoryRepository.findOneCategory(id);
   }
 
-  async create(data: Prisma.CategoryCreateInput) {
-    return this.prisma.category.create({
-      data,
-      include: { subCategory: true },
-    });
+  async create(dto: CategoryCreateDto) {
+    const data = {
+      name: dto.name,
+      subCategory: dto.subCategoryId
+        ? {
+            connect: dto.subCategoryId.map((id) => ({ id })),
+          }
+        : undefined,
+    };
+    return this.categoryRepository.create(data);
   }
 
-  async update(params: {
-    where: Prisma.CategoryWhereUniqueInput;
-    data: Prisma.CategoryUpdateInput;
-  }) {
-    const { where, data } = params;
-    return this.prisma.category.update({ where, data });
+  async update(id: number, dto: CategoryUpdateDto) {
+    const existingCategory = await this.getOne(id);
+    if (!existingCategory) {
+      throw new NotFoundException(`Category with ID ${id} not found`);
+    }
+    const updateData = {
+      name: dto.name ?? existingCategory.name,
+      subCategory: dto.subCategoryId
+        ? {
+            connect: dto.subCategoryId.map((id) => ({ id })),
+          }
+        : undefined,
+    };
+    return this.categoryRepository.update(id, updateData);
   }
 
-  async delete(id: Prisma.CategoryWhereUniqueInput) {
-    return this.prisma.category.delete({ where: id });
+  async delete(id: number) {
+    return this.categoryRepository.delete(id);
   }
 }

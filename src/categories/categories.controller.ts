@@ -5,12 +5,13 @@ import {
   Get,
   NotFoundException,
   Param,
-  Patch,
+  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
-import { Prisma } from '@prisma/client';
+import { CategoryCreateDto } from './dto/category-create';
+import { CategoryUpdateDto } from './dto/category-update';
 
 @Controller('categories')
 export class CategoriesController {
@@ -22,63 +23,29 @@ export class CategoriesController {
   }
 
   @Get(':id')
-  async getOneCategory(@Param('id') id: string) {
-    const existingCategory = await this.categoriesService.getOne({
-      id: Number(id),
-    });
+  async getOneCategory(@Param('id', ParseIntPipe) id: number) {
+    const existingCategory = await this.categoriesService.getOne(id);
     if (!existingCategory) {
       throw new NotFoundException(`Category with ID ${id} not found`);
     }
-    return this.categoriesService.getOne({ id: Number(id) });
+    return this.categoriesService.getOne(id);
   }
 
   @Post()
-  async createCategory(
-    @Body() categoryData: { name: string; subCategoryId?: number[] },
-  ) {
-    const { name, subCategoryId } = categoryData;
-
-    const createData: Prisma.CategoryCreateInput = {
-      name,
-      subCategory: subCategoryId
-        ? {
-            connect: subCategoryId.map((id) => ({ id })),
-          }
-        : undefined,
-    };
-
-    return this.categoriesService.create(createData);
+  async createCategory(@Body() categoryDto: CategoryCreateDto) {
+    return this.categoriesService.create(categoryDto);
   }
 
-  @Patch(':id')
+  @Put(':id')
   async updateCategory(
-    @Param('id') id: string,
-    @Body() categoryData: { name?: string; subCategoryId?: number[] },
+    @Param('id', ParseIntPipe) id: number,
+    @Body() categoryDto: CategoryUpdateDto,
   ) {
-    const existingCategory = await this.categoriesService.getOne({
-      id: Number(id),
-    });
-    if (!existingCategory) {
-      throw new NotFoundException(`Category with ID ${id} not found`);
-    }
-
-    const updateData: Prisma.CategoryUpdateInput = {
-      name: categoryData.name ?? existingCategory.name,
-      subCategory: categoryData.subCategoryId
-        ? {
-            connect: categoryData.subCategoryId.map((id) => ({ id })),
-          }
-        : undefined,
-    };
-
-    return this.categoriesService.update({
-      where: { id: Number(id) },
-      data: updateData,
-    });
+    return this.categoriesService.update(id, categoryDto);
   }
 
   @Delete(':id')
-  async deleteCategory(@Param('id') id: string) {
-    return this.categoriesService.delete({ id: Number(id) });
+  async deleteCategory(@Param('id', ParseIntPipe) id: number) {
+    return this.categoriesService.delete(id);
   }
 }
