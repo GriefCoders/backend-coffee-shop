@@ -4,13 +4,13 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
-import { UsersModule } from 'src/users/users.module'; // Import UsersModule
+import { UsersModule } from 'src/users/users.module';
 import { PrismaService } from 'src/prisma.service';
 import { PasswordModule } from 'src/password/password.module';
 
 @Module({
   imports: [
-    UsersModule, // Add UsersModule here
+    UsersModule,
     PasswordModule,
     PassportModule,
     JwtModule.register({
