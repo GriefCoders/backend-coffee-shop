@@ -82,6 +82,18 @@ export class CartRepository {
     });
   }
 
+  async clearCart(userId: number) {
+    // First delete all CartProduct items
+    await this.prisma.cartProduct.deleteMany({
+      where: { cart: { userId: Number(userId) } },
+    });
+
+    // Then delete the cart
+    return await this.prisma.cart.deleteMany({
+      where: { userId: Number(userId) },
+    });
+  }
+
   async decreaseQuantity(
     userId: number,
     productId: number,

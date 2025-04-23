@@ -1,117 +1,170 @@
 import { PrismaClient } from '@prisma/client';
-import * as bcrypt from 'bcryptjs';
-
 const prisma = new PrismaClient();
 
 async function main() {
-  // Create Categories and Subcategories
+  await prisma.cartProduct.deleteMany();
+  await prisma.cart.deleteMany();
+  await prisma.product.deleteMany();
+  await prisma.subCategory.deleteMany();
+  await prisma.category.deleteMany();
+  await prisma.user.deleteMany(); // если хочешь чистить и пользователей
+
+  console.log('🧹 База очищена');
+
+  // 1. Категории
   const coffeeCategory = await prisma.category.create({
-    data: {
-      name: 'Coffee',
-      subCategory: {
-        create: [
-          {
-            name: 'Espresso',
-            img: 'https://fs1.jura.com.ua/content/news/a14/1x1/664b076c9de4c.png',
-            product: {
-              create: [
-                {
-                  name: 'Espresso',
-                  description:
-                    "Espresso is a delicious concentrated form of coffee, served in shots. It's often the base of many other beverages, such as cappuccino, latte, americano, and macchiato.",
-                  img: 'https://fs1.jura.com.ua/content/news/a14/1x1/664b076c9de4c.png',
-                  price: 3.5,
-                },
-                {
-                  name: 'Latte',
-                  description:
-                    'A latte or caffè latte is a milk coffee that boasts a silky layer of foam. It is made with one or two shots of espresso, steamed milk, and a final, thin layer of frothed milk on top.',
-                  img: 'https://131899205.cdn6.editmysite.com/uploads/1/3/1/8/131899205/s488650153937811732_p57_i1_w1500.jpeg',
-                  price: 4.0,
-                },
-                {
-                  name: 'Cappuccino',
-                  description:
-                    'A cappuccino is a beloved espresso-based hot coffee drink made with layering of espresso, steamed milk, and milk foam on top.',
-                  img: 'https://merriam-webster.com/assets/mw/images/article/art-wap-landing-mp-lg/cappuccino-2029-e80b7c6d318c7862df2c4c8623a11f99@1x.jpg',
-                  price: 4.5,
-                },
-              ],
-            },
-          },
-          {
-            name: 'Cold Coffee',
-            img: 'https://static.toiimg.com/thumb/53842591.cms?imgsize=1077535&width=800&height=800',
-            product: {
-              create: [
-                {
-                  name: 'Iced Coffee',
-                  description:
-                    'Iced coffee is a coffee beverage served cold. It may be prepared by brewing coffee and then serving it over ice or in cold milk.',
-                  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIbV5MB5i_k9stP0RuJnH_M01BL_YtUQ65-A&s',
-                  price: 3.0,
-                },
-                {
-                  name: 'Cortado',
-                  description:
-                    'Cortado is a Spanish-inspired coffee beverage that combines equal parts of espresso and warm milk, creating a balanced and flavorful drink.',
-                  img: 'https://perfectdailygrind.com/wp-content/uploads/2020/03/Cortado-Gibraltar-glass.jpg',
-                  price: 3.2,
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
+    data: { name: 'Кофе' },
+  });
+
+  const dessertCategory = await prisma.category.create({
+    data: { name: 'Десерты' },
   });
 
   const teaCategory = await prisma.category.create({
+    data: { name: 'Чай' },
+  });
+
+  // 2. Подкатегории
+  const coffeeDrinks = await prisma.subCategory.create({
     data: {
-      name: 'Tea',
-      subCategory: {
-        create: [
-          {
-            name: 'Black Tea',
-            img: 'https://sakiproducts.com/cdn/shop/articles/Benefits-of-Drinking-Black-Tea-thumbnail_640x640.jpg?v=1660832924',
-            product: {
-              create: [
-                {
-                  name: 'Black Tea',
-                  description:
-                    'Black tea is a type of tea produced from the camellia sinensis plant that is highly oxidized, resulting in a dark reddish-gold hue.',
-                  img: 'https://sakiproducts.com/cdn/shop/articles/Benefits-of-Drinking-Black-Tea-thumbnail_640x640.jpg?v=1660832924',
-                  price: 2.5,
-                },
-              ],
-            },
-          },
-        ],
+      name: 'Кофейные напитки',
+      img: 'https://static.tildacdn.com/tild6337-6564-4135-a666-313764383639/photo.jpg',
+      category: { connect: { id: coffeeCategory.id } },
+    },
+  });
+
+  const coldDrinks = await prisma.subCategory.create({
+    data: {
+      name: 'Холодные напитки',
+      img: 'https://static.insales-cdn.com/files/1/3498/12463530/original/s1200.jpg',
+      category: { connect: { id: coffeeCategory.id } },
+    },
+  });
+
+  const cakes = await prisma.subCategory.create({
+    data: {
+      name: 'Торты и пирожные',
+      img: 'https://www.krassever.ru/statics/images/arcticles/052020/06052020x5c32fc77.jpg',
+      category: { connect: { id: dessertCategory.id } },
+    },
+  });
+
+  const teaDrinks = await prisma.subCategory.create({
+    data: {
+      name: 'Чайные напитки',
+      img: 'https://avatars.dzeninfra.ru/get-zen_doc/3755324/pub_5f76b8c085c72a7ce425d100_5f76b8c185c72a7ce425d22a/scale_1200',
+      category: { connect: { id: teaCategory.id } },
+    },
+  });
+
+  // 3. Продукты
+
+  const products = [
+    // Кофе
+    {
+      name: 'Эспрессо',
+      description: 'Маленький, крепкий кофе.',
+      img: 'https://galaktika29.ru/upload/iblock/db6/k0ta8ki954k0l5qrh3rt4214nfa40rep.jpg',
+      price: 150,
+      category: coffeeDrinks,
+    },
+    {
+      name: 'Капучино',
+      description: 'С молочной пенкой.',
+      img: 'https://i-coffee.me/wp-content/uploads/2022/02/Coffee_Cappuccino_Cream_Cup_Saucer_525045_2048x1152.jpg',
+      price: 200,
+      category: coffeeDrinks,
+    },
+    {
+      name: 'Латте',
+      description: 'Нежный и молочный.',
+      img: 'https://www.torrefacto.ru/upload/uf/d00/mdoibknztzibkoforsrbpa93ijzbhw9f.jpg',
+      price: 220,
+      category: coffeeDrinks,
+    },
+    {
+      name: 'Айс Латте',
+      description: 'Охлаждённый латте со льдом.',
+      img: 'https://static.tildacdn.com/stor3961-6537-4063-b734-343261343133/39744883.jpg',
+      price: 230,
+      category: coldDrinks,
+    },
+    {
+      name: 'Фраппучино',
+      description: 'Сливочный ледяной напиток.',
+      img: 'https://budnikofe.ru/sites/default/files/inline-images/Frappuchino3_0.jpg',
+      price: 250,
+      category: coldDrinks,
+    },
+
+    // Десерты
+    {
+      name: 'Чизкейк Нью-Йорк',
+      description: 'Классический чизкейк с ванилью.',
+      img: 'https://i.obozrevatel.com/food/recipemain/2019/2/8/999470-880x544.jpg?size=636x424',
+      price: 270,
+      category: cakes,
+    },
+    {
+      name: 'Медовик',
+      description: 'Медовый торт с кремом.',
+      img: 'https://cdn.lifehacker.ru/wp-content/uploads/2022/11/shutterstock_2154067297_1668017816-scaled.jpg',
+      price: 250,
+      category: cakes,
+    },
+    {
+      name: 'Тирамису',
+      description: 'Итальянский десерт с кофе и маскарпоне.',
+      img: 'https://lasunka.com/s165-prew.jpg',
+      price: 290,
+      category: cakes,
+    },
+
+    // Чай
+    {
+      name: 'Чёрный чай',
+      description: 'Классический черный чай.',
+      img: 'https://sakiproducts.com/cdn/shop/articles/Benefits-of-Drinking-Black-Tea-thumbnail_800x800.jpg?v=1660832924',
+      price: 100,
+      category: teaDrinks,
+    },
+    {
+      name: 'Зелёный чай',
+      description: 'Освежающий зелёный чай.',
+      img: 'https://aumishop.ru/image/catalog/-%D0%BD%D0%BE%D0%B2%D1%8B%D0%B5-2020/polza-zelenogo-chaya.jpg',
+      price: 110,
+      category: teaDrinks,
+    },
+    {
+      name: 'Матча латте',
+      description: 'Зелёный чай с молоком.',
+      img: 'https://coffee-static.storage.yandexcloud.net/files/shares/data/blog/matcha-latte/image5.jpg',
+      price: 190,
+      category: teaDrinks,
+    },
+  ];
+
+  // Создаём продукты
+  for (const product of products) {
+    await prisma.product.create({
+      data: {
+        name: product.name,
+        description: product.description,
+        img: product.img,
+        price: product.price,
+        productCategoryId: product.category.id,
       },
-    },
-  });
+    });
+  }
 
-  // Create Users
-  const hashedPassword = await bcrypt.hash('password123', 10);
-
-  const user = await prisma.user.create({
-    data: {
-      email: 'john.doe@example.com',
-      name: 'John Doe',
-      password: hashedPassword,
-      role: 'user',
-    },
-  });
-
-  // Create Cart for User
-
-  console.log('Database has been seeded!');
+  console.log('✅ Полное наполнение базы завершено!');
 }
 
 main()
   .catch((e) => {
-    throw e;
+    console.error('❌ Ошибка:', e);
+    process.exit(1);
   })
-  .finally(async () => {
-    await prisma.$disconnect();
+  .finally(() => {
+    prisma.$disconnect();
   });

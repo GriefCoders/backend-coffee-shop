@@ -17,6 +17,10 @@ export class CartService {
     return this.cartRepository.removeFromCart(userId, productId);
   }
 
+  async clearCart(userId: number) {
+    return this.cartRepository.clearCart(userId);
+  }
+
   async decreaseQuantity(
     userId: number,
     productId: number,
