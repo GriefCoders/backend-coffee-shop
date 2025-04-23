@@ -56,6 +56,11 @@ export class CartController {
     );
   }
 
+  @Delete('clear')
+  async clearCart(@Body() clearCartDto: { userId: number }) {
+    return await this.cartService.clearCart(clearCartDto.userId);
+  }
+
   @Get(':userId')
   async getCart(@Param('userId', ParseIntPipe) userId: number) {
     return await this.cartService.getCart(userId);
