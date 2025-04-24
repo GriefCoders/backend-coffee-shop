@@ -1,10 +1,11 @@
 services:
   app:
-    build: .
-    container_name: backend-coffee-app
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
-      DATABASE_URL: postgresql://postgres:password@postgres:5432/coffee
-      JWT_SECRET: 'backend'
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/coffee
+      - JWT_SECRET='backend'
     ports:
       - '3003:3000'
     depends_on:
