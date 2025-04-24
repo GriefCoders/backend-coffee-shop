@@ -11,7 +11,7 @@ services:
       postgres:
         condition: service_healthy
     command: >
-      sh -c "npx prisma db push && npx prisma db seed && npm run start"
+      sh -c "npx prisma db push && npx prisma db seed && npm run start:prod"
 
   postgres:
     container_name: postgres-coffee-app
