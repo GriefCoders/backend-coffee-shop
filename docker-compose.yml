@@ -3,7 +3,7 @@ services:
     build: .
     container_name: backend-coffee-app
     environment:
-      DATABASE_URL: postgresql://postgres:password@postgres:5440/coffee
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/coffee
       JWT_SECRET: 'backend'
     ports:
       - '3010:3000'
